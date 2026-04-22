@@ -3,34 +3,40 @@ export default function Home() {
     <main className="min-h-screen bg-neutral-950 text-white selection:bg-amber-500/30">
       
       {/* HERO */}
-      <section className="relative min-h-screen flex items-end pb-24 md:pb-32">
-        {/* Background */}
-        <div className="absolute inset-0">
+      <section className="relative min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 z-0">
           <img 
             src="/images/sa-skyline-night.jpg" 
-            alt=""
-            className="w-full h-full object-cover opacity-30"
+            alt="San Antonio skyline"
+            className="w-full h-full object-cover opacity-40"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-neutral-950 via-neutral-950/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-neutral-950/80 via-transparent to-neutral-950/80" />
         </div>
 
-        <div className="relative z-10 w-full px-8 md:px-16 lg:px-24">
-          <div className="max-w-6xl">
-            <p className="text-xs tracking-[0.4em] uppercase text-neutral-500 mb-8">
-              South Texas
-            </p>
-            
-            <h1 className="text-6xl sm:text-8xl md:text-9xl font-light tracking-tight leading-[0.85] mb-8">
-              <span className="block font-extralight">210</span>
-              <span className="block">Business</span>
-              <span className="block text-amber-500">Network</span>
-            </h1>
+        {/* Hero Content */}
+        <div className="relative z-10 max-w-7xl mx-auto w-full py-20">
+          <p className="text-sm md:text-base tracking-[0.3em] uppercase text-neutral-500 mb-6 md:mb-8">
+            San Antonio & South Texas
+          </p>
 
-            <p className="text-lg md:text-xl text-neutral-400 font-light max-w-lg leading-relaxed">
-              Where South Texas business happens.
-            </p>
-          </div>
+          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold leading-[0.9] tracking-tight mb-8">
+            <span className="block">210</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">
+              Business
+            </span>
+            <span className="block">Network</span>
+          </h1>
+
+          <p className="text-xl md:text-3xl lg:text-4xl text-neutral-300 font-light max-w-3xl leading-relaxed mb-12">
+            Where South Texas business happens.
+          </p>
+
+          <div className="w-24 h-1 bg-gradient-to-r from-amber-400 to-orange-500" />
         </div>
+
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-neutral-950 to-transparent z-10" />
       </section>
 
       {/* THE NETWORK */}
