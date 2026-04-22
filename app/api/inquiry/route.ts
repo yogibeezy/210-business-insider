@@ -31,8 +31,7 @@ export async function POST(request: Request) {
         { key: 'businessName', value: business },
         { key: 'source', value: '210 Business Network Website' },
         { key: 'inquiryDate', value: new Date().toISOString() }
-      ],
-      tags: ['210bn', 'website-inquiry']
+      ]
     }
 
     console.log('Sending to Global Control:', JSON.stringify(gcPayload))
@@ -67,33 +66,27 @@ export async function POST(request: Request) {
     const contactData = result.data || result
     const contactId = contactData._id || contactData.id || 'created'
 
-    // Apply tags using the contact update endpoint (PUT /contacts/:id)
+    // Apply tags using the contact update endpoint
     // Tag IDs: 210bn = 69e8b46f80a5749c2a3f6f0a, website-inquiry = 69e8b47580a5749c2a3f7071
-    try {
-      console.log('Applying tags to contact:', contactId)
-      
-      const tagResponse = await fetch(`https://api.globalcontrol.io/api/ai/contacts/${contactId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-KEY': 'a5934d6c63f5d021e4d85164945d144fbefeaf6298938c02ba2655acb093379c'
-        },
-        body: JSON.stringify({
-          tags: ['69e8b46f80a5749c2a3f6f0a', '69e8b47580a5749c2a3f7071']
-        })
+    const tagPromise = fetch(`https://api.globalcontrol.io/api/ai/contacts/${contactId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-KEY': 'a5934d6c63f5d021e4d85164945d144fbefeaf6298938c02ba2655acb093379c'
+      },
+      body: JSON.stringify({
+        tags: ['69e8b46f80a5749c2a3f6f0a', '69e8b47580a5749c2a3f7071']
       })
-      
-      const tagResult = await tagResponse.json()
-      console.log('Tag application result:', tagResult)
-      
-      if (!tagResponse.ok) {
-        console.error('Failed to apply tags:', tagResponse.status, tagResult)
-      } else {
-        console.log('Successfully applied tags')
-      }
-    } catch (tagError) {
-      console.error('Error applying tags:', tagError)
-    }
+    }).then(async (res) => {
+      const data = await res.json()
+      console.log('Tags applied:', data)
+      return data
+    }).catch(err => {
+      console.error('Tag error:', err)
+    })
+
+    // Wait for tag application to complete before returning
+    await tagPromise
 
     return new Response(
       JSON.stringify({ 
