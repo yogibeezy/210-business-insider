@@ -2,14 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 20, 20, 20;
-  --background-rgb: 250, 248, 245;
-}
-
 body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-rgb));
+  color: white;
+  background: black;
 }
 
 @layer utilities {

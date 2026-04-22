@@ -5,8 +5,8 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
 export const metadata: Metadata = {
-  title: '210 Business Insider | San Antonio Business Stories',
-  description: 'Local business stories from San Antonio and South Texas. Real businesses, real people, real impact.',
+  title: '210 Business Network | Where South Texas Business Happens',
+  description: 'The network for San Antonio and South Texas business owners, operators, and builders.',
 }
 
 export default function RootLayout({

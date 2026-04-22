@@ -1,6 +1,6 @@
-# 210 Business Insider
+# 210 Business Network
 
-Local business stories from San Antonio and South Texas. Built with Next.js, deployed on Vercel.
+Where South Texas business happens. Built with Next.js, deployed on Vercel.
 
 ## Getting Started
 
@@ -16,19 +16,6 @@ Open [http://localhost:3000](http://localhost:3000).
 1. Push to GitHub
 2. Import to Vercel
 3. Deploy
-
-## Adding Content
-
-1. Add San Antonio photography to `/public/images/`
-2. Update stories in `/lib/content.ts`
-3. Write story content in `/app/[category]/[id]/page.tsx`
-
-## Design Notes
-
-- Warm, local feel (cream/stone palette)
-- Mobile-first
-- Real photography over stock
-- No aggressive CTAs — let content attract
 
 ---
 Built for San Antonio.
