@@ -69,7 +69,8 @@ export default async function handler(
       success: true,
       message: 'Thank you. We will be in touch.',
       contactId: contactId,
-      tagsApplied: updateRes.ok
+      tagsApplied: updateRes.ok,
+      updateStatus: updateRes.status
     })
 
   } catch (error) {
