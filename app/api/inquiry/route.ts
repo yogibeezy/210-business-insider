@@ -5,6 +5,41 @@ export async function GET() {
   )
 }
 
+// Helper function to apply tags with timeout
+async function applyTags(contactId: string): Promise<boolean> {
+  const GC_API_KEY = 'a5934d6c63f5d021e4d85164945d144fbefeaf6298938c02ba2655acb093379c'
+  const tagIds = ['69e8b46f80a5749c2a3f6f0a', '69e8b47580a5749c2a3f7071']
+  
+  try {
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 5000)
+    
+    const response = await fetch(`https://api.globalcontrol.io/api/ai/contacts/${contactId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-KEY': GC_API_KEY
+      },
+      body: JSON.stringify({ tags: tagIds }),
+      signal: controller.signal
+    })
+    
+    clearTimeout(timeout)
+    
+    if (!response.ok) {
+      console.error('Tag application failed:', response.status)
+      return false
+    }
+    
+    const result = await response.json()
+    console.log('Tags applied successfully:', result)
+    return true
+  } catch (error) {
+    console.error('Tag application error:', error)
+    return false
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json()
@@ -18,10 +53,11 @@ export async function POST(request: Request) {
       )
     }
 
-    // Send to Global Control
+    const GC_API_KEY = 'a5934d6c63f5d021e4d85164945d144fbefeaf6298938c02ba2655acb093379c'
     const firstName = name.split(' ')[0] || ''
     const lastName = name.split(' ').slice(1).join(' ') || ''
     
+    // Create contact in Global Control
     const gcPayload = {
       email: email,
       firstName: firstName,
@@ -34,13 +70,13 @@ export async function POST(request: Request) {
       ]
     }
 
-    console.log('Sending to Global Control:', JSON.stringify(gcPayload))
+    console.log('Creating contact:', JSON.stringify(gcPayload))
 
     const response = await fetch('https://api.globalcontrol.io/api/ai/contacts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-API-KEY': 'a5934d6c63f5d021e4d85164945d144fbefeaf6298938c02ba2655acb093379c'
+        'X-API-KEY': GC_API_KEY
       },
       body: JSON.stringify(gcPayload)
     })
@@ -54,45 +90,35 @@ export async function POST(request: Request) {
       )
     }
 
-    let result
-    try {
-      result = await response.json()
-    } catch (e) {
-      result = { raw: await response.text() }
-    }
-    console.log('Global Control success:', result)
+    const result = await response.json()
+    console.log('Contact created:', result)
 
-    // Global Control returns {type: "response", data: {...}}
     const contactData = result.data || result
-    const contactId = contactData._id || contactData.id || 'created'
+    const contactId = contactData._id || contactData.id
 
-    // Apply tags using the contact update endpoint
-    // Tag IDs: 210bn = 69e8b46f80a5749c2a3f6f0a, website-inquiry = 69e8b47580a5749c2a3f7071
-    const tagPromise = fetch(`https://api.globalcontrol.io/api/ai/contacts/${contactId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-KEY': 'a5934d6c63f5d021e4d85164945d144fbefeaf6298938c02ba2655acb093379c'
-      },
-      body: JSON.stringify({
-        tags: ['69e8b46f80a5749c2a3f6f0a', '69e8b47580a5749c2a3f7071']
-      })
-    }).then(async (res) => {
-      const data = await res.json()
-      console.log('Tags applied:', data)
-      return data
-    }).catch(err => {
-      console.error('Tag error:', err)
-    })
+    if (!contactId) {
+      console.error('No contact ID returned')
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          message: 'Thank you. We will be in touch.',
+          warning: 'Contact created but tags not applied'
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      )
+    }
 
-    // Wait for tag application to complete before returning
-    await tagPromise
+    // Apply tags synchronously
+    console.log('Applying tags to contact:', contactId)
+    const tagsApplied = await applyTags(contactId)
+    console.log('Tag application result:', tagsApplied)
 
     return new Response(
       JSON.stringify({ 
         success: true, 
         message: 'Thank you. We will be in touch.',
-        contactId: contactId
+        contactId: contactId,
+        tagsApplied: tagsApplied
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     )
