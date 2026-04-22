@@ -1,3 +1,5 @@
+import InquiryForm from '@/components/InquiryForm'
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-neutral-950 text-white selection:bg-amber-500/30">
@@ -100,82 +102,7 @@ export default function Home() {
             Membership is curated. Tell us about your business and we'll be in touch.
           </p>
 
-          <form id="inquiry-form" className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
-              <input 
-                type="text" 
-                name="name"
-                placeholder="Name"
-                required
-                className="w-full px-6 py-4 bg-neutral-900 border border-neutral-800 text-white placeholder:text-neutral-600 focus:outline-none focus:border-amber-500/50 transition-colors font-light"
-              />
-              <input 
-                type="email" 
-                name="email"
-                placeholder="Email"
-                required
-                className="w-full px-6 py-4 bg-neutral-900 border border-neutral-800 text-white placeholder:text-neutral-600 focus:outline-none focus:border-amber-500/50 transition-colors font-light"
-              />
-            </div>
-            <input 
-              type="text" 
-              name="business"
-              placeholder="Business name"
-              required
-              className="w-full px-6 py-4 bg-neutral-900 border border-neutral-800 text-white placeholder:text-neutral-600 focus:outline-none focus:border-amber-500/50 transition-colors font-light"
-            />
-            <button 
-              type="submit"
-              id="submit-btn"
-              className="w-full md:w-auto px-12 py-4 bg-white text-neutral-950 font-medium hover:bg-amber-500 transition-colors"
-            >
-              Submit inquiry
-            </button>
-            <p id="form-message" className="text-sm mt-4 hidden"></p>
-          </form>
-
-          <script dangerouslySetInnerHTML={{__html: `
-            document.getElementById('inquiry-form').addEventListener('submit', async (e) => {
-              e.preventDefault();
-              const btn = document.getElementById('submit-btn');
-              const msg = document.getElementById('form-message');
-              
-              btn.textContent = 'Submitting...';
-              btn.disabled = true;
-              
-              const formData = {
-                name: e.target.name.value,
-                email: e.target.email.value,
-                business: e.target.business.value
-              };
-              
-              try {
-                const res = await fetch('/api/inquiry', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify(formData)
-                });
-                
-                const data = await res.json();
-                
-                if (res.ok) {
-                  msg.textContent = 'Thank you. We will be in touch.';
-                  msg.className = 'text-sm mt-4 text-amber-500';
-                  e.target.reset();
-                } else {
-                  msg.textContent = 'Something went wrong. Please try again.';
-                  msg.className = 'text-sm mt-4 text-red-500';
-                }
-              } catch (err) {
-                msg.textContent = 'Something went wrong. Please try again.';
-                msg.className = 'text-sm mt-4 text-red-500';
-              }
-              
-              msg.classList.remove('hidden');
-              btn.textContent = 'Submit inquiry';
-              btn.disabled = false;
-            });
-          `}} />
+          <InquiryForm />
         </div>
       </section>
 
