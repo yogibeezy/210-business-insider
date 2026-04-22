@@ -1,4 +1,4 @@
-export const runtime = 'edge'
+import fetch from 'node-fetch'
 
 export async function GET() {
   return new Response(
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     const firstName = name.split(' ')[0] || ''
     const lastName = name.split(' ').slice(1).join(' ') || ''
     
-    // Create contact
+    // Step 1: Create contact (POST doesn't accept tags/customFields)
     const createRes = await fetch('https://api.globalcontrol.io/api/ai/contacts', {
       method: 'POST',
       headers: {
@@ -34,12 +34,7 @@ export async function POST(request: Request) {
         email: email,
         firstName: firstName,
         lastName: lastName,
-        name: name,
-        customFields: [
-          { key: 'businessName', value: business },
-          { key: 'source', value: '210 Business Network Website' },
-          { key: 'inquiryDate', value: new Date().toISOString() }
-        ]
+        name: name
       })
     })
 
@@ -51,7 +46,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const createData = await createRes.json()
+    const createData = await createRes.json() as any
     const contactId = createData.data?._id || createData.data?.id
 
     if (!contactId) {
@@ -61,27 +56,32 @@ export async function POST(request: Request) {
       )
     }
 
-    // Apply tags - fire and forget but wait for it
-    const tagPromise = fetch(`https://api.globalcontrol.io/api/ai/contacts/${contactId}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-API-KEY': GC_API_KEY
-      },
-      body: JSON.stringify({
-        tags: ['69e8b46f80a5749c2a3f6f0a', '69e8b47580a5749c2a3f7071']
-      })
-    })
-
-    // Wait for tag application with timeout
-    const timeoutPromise = new Promise((_, reject) => 
-      setTimeout(() => reject(new Error('Timeout')), 3000)
-    )
-    
+    // Step 2: Update contact with tags and custom fields (PUT accepts them)
     try {
-      await Promise.race([tagPromise, timeoutPromise])
-    } catch {
-      // Timeout is ok, tags will apply eventually
+      const updateRes = await fetch(`https://api.globalcontrol.io/api/ai/contacts/${contactId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-KEY': GC_API_KEY
+        },
+        body: JSON.stringify({
+          tags: ['69e8b46f80a5749c2a3f6f0a', '69e8b47580a5749c2a3f7071'],
+          customFields: [
+            { key: 'businessName', value: business },
+            { key: 'source', value: '210 Business Network Website' },
+            { key: 'inquiryDate', value: new Date().toISOString() }
+          ]
+        })
+      })
+
+      if (!updateRes.ok) {
+        console.error('Failed to update contact with tags:', updateRes.status)
+      } else {
+        const updateData = await updateRes.json()
+        console.log('Update successful:', updateData)
+      }
+    } catch (updateError) {
+      console.error('Error updating contact:', updateError)
     }
 
     return new Response(
@@ -94,6 +94,7 @@ export async function POST(request: Request) {
     )
 
   } catch (error) {
+    console.error('API error:', error)
     return new Response(
       JSON.stringify({ error: `Internal server error: ${error instanceof Error ? error.message : 'Unknown'}` }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
