@@ -13,12 +13,15 @@ export default function InquiryForm() {
     setMessage('')
     setError(false)
 
-    const formData = new FormData(e.currentTarget)
+    const form = e.currentTarget
+    const formData = new FormData(form)
     const data = {
       name: formData.get('name') as string,
       email: formData.get('email') as string,
       business: formData.get('business') as string,
     }
+
+    console.log('Submitting form data:', data)
 
     try {
       const res = await fetch('/api/inquiry', {
@@ -27,18 +30,32 @@ export default function InquiryForm() {
         body: JSON.stringify(data),
       })
 
-      const result = await res.json()
+      console.log('Response status:', res.status)
+      
+      let result
+      try {
+        result = await res.json()
+      } catch (parseError) {
+        console.error('Failed to parse response:', parseError)
+        setMessage('Server error. Please try again.')
+        setError(true)
+        setSubmitting(false)
+        return
+      }
+
+      console.log('Response data:', result)
 
       if (res.ok) {
         setMessage('Thank you. We will be in touch.')
         setError(false)
-        e.currentTarget.reset()
+        form.reset()
       } else {
-        setMessage(result.error || 'Something went wrong. Please try again.')
+        setMessage(result.error || `Error: ${res.status}. Please try again.`)
         setError(true)
       }
     } catch (err) {
-      setMessage('Something went wrong. Please try again.')
+      console.error('Fetch error:', err)
+      setMessage(`Network error: ${err instanceof Error ? err.message : 'Unknown error'}. Please try again.`)
       setError(true)
     }
 
