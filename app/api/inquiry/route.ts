@@ -51,14 +51,19 @@ export async function POST(request: Request) {
       )
     }
 
-    const data = await response.json()
+    let data
+    try {
+      data = await response.json()
+    } catch (e) {
+      data = { raw: await response.text() }
+    }
     console.log('Global Control success:', data)
 
     return new Response(
       JSON.stringify({ 
         success: true, 
         message: 'Thank you. We will be in touch.',
-        contactId: data.id || data.contactId
+        contactId: data?.id || data?.contactId || 'created'
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     )
