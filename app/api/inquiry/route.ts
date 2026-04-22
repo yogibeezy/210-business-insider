@@ -18,46 +18,15 @@ export async function POST(request: Request) {
       )
     }
 
-    // Send to Global Control
-    const gcPayload = {
-      email: email,
-      firstName: name.split(' ')[0],
-      lastName: name.split(' ').slice(1).join(' ') || '',
-      customFields: {
-        businessName: business,
-        source: '210 Business Network Website',
-        inquiryDate: new Date().toISOString()
-      },
-      tags: ['210bn', 'website-inquiry']
-    }
-    
-    console.log('Sending to Global Control:', JSON.stringify(gcPayload))
-    
-    const response = await fetch('https://app.globalcontrolcenter.com/api/v1/contacts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer a5934d6c63f5d021e4d85164945d144fbefeaf6298938c02ba2655acb093379c'
-      },
-      body: JSON.stringify(gcPayload)
-    })
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error('Global Control API error:', response.status, errorText)
-      return new Response(
-        JSON.stringify({ error: `Failed to create contact: ${response.status} - ${errorText}` }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      )
-    }
-
-    const data = await response.json()
+    // For now, just return success without Global Control
+    // TODO: Add Global Control integration once API is verified
+    console.log('New inquiry:', { name, email, business, timestamp: new Date().toISOString() })
 
     return new Response(
       JSON.stringify({ 
         success: true, 
-        message: 'Inquiry submitted successfully',
-        contactId: data.id 
+        message: 'Thank you. We will be in touch.',
+        received: { name, email, business }
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     )
