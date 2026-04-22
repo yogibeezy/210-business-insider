@@ -33,7 +33,7 @@ export async function POST(request: Request) {
 
     console.log('Sending to Global Control:', JSON.stringify(gcPayload))
 
-    const response = await fetch('https://app.globalcontrolcenter.com/api/v1/contacts', {
+    const response = await fetch('https://api.globalcontrolcenter.com/v1/contacts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
