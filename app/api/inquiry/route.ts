@@ -1,18 +1,23 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
+export const runtime = 'nodejs'
+export const maxDuration = 30
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
-  }
+export async function GET() {
+  return new Response(
+    JSON.stringify({ status: 'API is working' }),
+    { status: 200, headers: { 'Content-Type': 'application/json' } }
+  )
+}
 
+export async function POST(request: Request) {
   try {
-    const { name, email, business } = req.body
+    const body = await request.json()
+    const { name, email, business } = body
 
     if (!name || !email || !business) {
-      return res.status(400).json({ error: 'Missing required fields' })
+      return new Response(
+        JSON.stringify({ error: 'Missing required fields' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      )
     }
 
     const GC_API_KEY = 'a5934d6c63f5d021e4d85164945d144fbefeaf6298938c02ba2655acb093379c'
@@ -36,17 +41,23 @@ export default async function handler(
 
     if (!createRes.ok) {
       const errorText = await createRes.text()
-      return res.status(500).json({ error: `Global Control error: ${createRes.status} - ${errorText}` })
+      return new Response(
+        JSON.stringify({ error: `Global Control error: ${createRes.status} - ${errorText}` }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      )
     }
 
     const createData = await createRes.json()
     const contactId = createData.data?._id || createData.data?.id
 
     if (!contactId) {
-      return res.status(200).json({ success: true, message: 'Thank you. We will be in touch.' })
+      return new Response(
+        JSON.stringify({ success: true, message: 'Thank you. We will be in touch.' }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      )
     }
 
-    // Step 2: Update contact with tags - MUST complete before response
+    // Step 2: Update contact with tags
     const updateRes = await fetch(`https://api.globalcontrol.io/api/ai/contacts/${contactId}`, {
       method: 'PUT',
       headers: {
@@ -65,18 +76,22 @@ export default async function handler(
 
     const updateData = await updateRes.json()
 
-    return res.status(200).json({
-      success: true,
-      message: 'Thank you. We will be in touch.',
-      contactId: contactId,
-      tagsApplied: updateRes.ok,
-      updateStatus: updateRes.status
-    })
+    return new Response(
+      JSON.stringify({ 
+        success: true, 
+        message: 'Thank you. We will be in touch.',
+        contactId: contactId,
+        tagsApplied: updateRes.ok,
+        updateStatus: updateRes.status
+      }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } }
+    )
 
   } catch (error) {
     console.error('API error:', error)
-    return res.status(500).json({
-      error: `Internal server error: ${error instanceof Error ? error.message : 'Unknown'}`
-    })
+    return new Response(
+      JSON.stringify({ error: `Internal server error: ${error instanceof Error ? error.message : 'Unknown'}` }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
+    )
   }
 }
