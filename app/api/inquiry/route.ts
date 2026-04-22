@@ -67,31 +67,28 @@ export async function POST(request: Request) {
     const contactData = result.data || result
     const contactId = contactData._id || contactData.id || 'created'
 
-    // Fire tags using the tags/fire endpoint with proper payload format
+    // Apply tags using the contact update endpoint (PUT /contacts/:id)
     const tagIds = ['69e8b46f80a5749c2a3f6f0a', '69e8b47580a5749c2a3f7071'] // 210bn, website-inquiry
     
-    for (const tagId of tagIds) {
-      try {
-        const tagResponse = await fetch('https://api.globalcontrol.io/api/ai/tags/fire', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-API-KEY': 'a5934d6c63f5d021e4d85164945d144fbefeaf6298938c02ba2655acb093379c'
-          },
-          body: JSON.stringify({
-            tag: tagId,
-            contact: contactId
-          })
+    try {
+      const tagResponse = await fetch(`https://api.globalcontrol.io/api/ai/contacts/${contactId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-KEY': 'a5934d6c63f5d021e4d85164945d144fbefeaf6298938c02ba2655acb093379c'
+        },
+        body: JSON.stringify({
+          tags: tagIds
         })
-        
-        if (!tagResponse.ok) {
-          console.error(`Failed to fire tag ${tagId}:`, tagResponse.status)
-        } else {
-          console.log(`Successfully fired tag ${tagId}`)
-        }
-      } catch (tagError) {
-        console.error(`Error firing tag ${tagId}:`, tagError)
+      })
+      
+      if (!tagResponse.ok) {
+        console.error('Failed to apply tags:', tagResponse.status)
+      } else {
+        console.log('Successfully applied tags:', tagIds)
       }
+    } catch (tagError) {
+      console.error('Error applying tags:', tagError)
     }
 
     return new Response(
