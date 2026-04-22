@@ -19,15 +19,19 @@ export async function POST(request: Request) {
     }
 
     // Send to Global Control
+    const firstName = name.split(' ')[0] || ''
+    const lastName = name.split(' ').slice(1).join(' ') || ''
+    
     const gcPayload = {
       email: email,
-      firstName: name.split(' ')[0] || '',
-      lastName: name.split(' ').slice(1).join(' ') || '',
-      customFields: {
-        businessName: business,
-        source: '210 Business Network Website',
-        inquiryDate: new Date().toISOString()
-      },
+      firstName: firstName,
+      lastName: lastName,
+      name: name,
+      customFields: [
+        { key: 'businessName', value: business },
+        { key: 'source', value: '210 Business Network Website' },
+        { key: 'inquiryDate', value: new Date().toISOString() }
+      ],
       tags: ['210bn', 'website-inquiry']
     }
 
@@ -51,19 +55,23 @@ export async function POST(request: Request) {
       )
     }
 
-    let data
+    let result
     try {
-      data = await response.json()
+      result = await response.json()
     } catch (e) {
-      data = { raw: await response.text() }
+      result = { raw: await response.text() }
     }
-    console.log('Global Control success:', data)
+    console.log('Global Control success:', result)
+
+    // Global Control returns {type: "response", data: {...}}
+    const contactData = result.data || result
+    const contactId = contactData._id || contactData.id || 'created'
 
     return new Response(
       JSON.stringify({ 
         success: true, 
         message: 'Thank you. We will be in touch.',
-        contactId: data?.id || data?.contactId || 'created'
+        contactId: contactId
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     )
