@@ -53,14 +53,14 @@ export default function InquiryForm() {
           name="name"
           placeholder="Name"
           required
-          className="w-full px-6 py-4 bg-neutral-800 border border-neutral-700 text-white placeholder:text-neutral-400 focus:outline-none focus:border-amber-500/50 transition-colors font-light"
+          className="w-full px-6 py-4 bg-white border border-neutral-300 text-black placeholder:text-neutral-500 focus:outline-none focus:border-amber-500 transition-colors font-light"
         />
         <input 
           type="email" 
           name="email"
           placeholder="Email"
           required
-          className="w-full px-6 py-4 bg-neutral-800 border border-neutral-700 text-white placeholder:text-neutral-400 focus:outline-none focus:border-amber-500/50 transition-colors font-light"
+          className="w-full px-6 py-4 bg-white border border-neutral-300 text-black placeholder:text-neutral-500 focus:outline-none focus:border-amber-500 transition-colors font-light"
         />
       </div>
       <input 
@@ -68,7 +68,7 @@ export default function InquiryForm() {
         name="business"
         placeholder="Business name"
         required
-        className="w-full px-6 py-4 bg-neutral-800 border border-neutral-700 text-white placeholder:text-neutral-400 focus:outline-none focus:border-amber-500/50 transition-colors font-light"
+        className="w-full px-6 py-4 bg-white border border-neutral-300 text-black placeholder:text-neutral-500 focus:outline-none focus:border-amber-500 transition-colors font-light"
       />
       <button 
         type="submit"
