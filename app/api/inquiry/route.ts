@@ -1,3 +1,10 @@
+export async function GET() {
+  return new Response(
+    JSON.stringify({ status: 'API is working' }),
+    { status: 200, headers: { 'Content-Type': 'application/json' } }
+  )
+}
+
 export async function POST(request: Request) {
   try {
     const body = await request.json()
