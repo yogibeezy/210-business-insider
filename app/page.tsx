@@ -47,26 +47,42 @@ export default function Home() {
       <section className="px-6 md:px-12 lg:px-24 py-24 md:py-32 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <p className="text-sm tracking-[0.3em] uppercase text-amber-400 mb-4">The Network</p>
-          <h2 className="text-3xl md:text-5xl font-bold mb-6">Not a directory. A network.</h2>
+          <h2 className="text-3xl md:text-5xl font-bold mb-6">Every business. Every trade.</h2>
           <p className="text-white/60 text-lg md:text-xl max-w-2xl mb-16">
-            Real businesses. Real connections. Real opportunities to grow together.
+            If you serve South Texas, you belong here. No exceptions. No exclusions.
           </p>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {[
               { icon: '❄️', name: 'HVAC' },
               { icon: '🚿', name: 'Plumbing' },
-              { icon: '🚗', name: 'Automotive' },
+              { icon: '🚗', name: 'Auto' },
               { icon: '🏠', name: 'Roofing' },
               { icon: '⚡', name: 'Electrical' },
-              { icon: '🌳', name: 'Landscaping' },
+              { icon: '🌳', name: 'Landscape' },
+              { icon: '🏗️', name: 'Concrete' },
+              { icon: '🎨', name: 'Painting' },
+              { icon: '🚪', name: 'Fencing' },
+              { icon: '🏊', name: 'Pools' },
+              { icon: '🐜', name: 'Pest Control' },
+              { icon: '📦', name: 'Moving' },
+              { icon: '💧', name: 'Restoration' },
+              { icon: '🪟', name: 'Glass' },
+              { icon: '🛻', name: 'Towing' },
+              { icon: '🏪', name: 'Retail' },
+              { icon: '🍔', name: 'Restaurants' },
+              { icon: '💇', name: 'Salons' },
             ].map((trade) => (
-              <div key={trade.name} className="bg-white/5 border border-white/10 rounded-lg p-6 text-center hover:bg-white/10 transition-colors">
-                <div className="text-3xl mb-3">{trade.icon}</div>
+              <div key={trade.name} className="bg-white/5 border border-white/10 rounded-lg p-4 text-center hover:bg-white/10 transition-colors">
+                <div className="text-2xl mb-2">{trade.icon}</div>
                 <p className="text-sm font-medium text-white/80">{trade.name}</p>
               </div>
             ))}
           </div>
+          
+          <p className="text-center text-white/40 mt-8 text-sm">
+            And every other business that keeps South Texas running.
+          </p>
         </div>
       </section>
 
@@ -100,11 +116,17 @@ export default function Home() {
       <section className="px-6 md:px-12 lg:px-24 py-24 md:py-32 border-t border-white/10">
         <div className="max-w-7xl mx-auto">
           <p className="text-sm tracking-[0.3em] uppercase text-amber-400 mb-4">The Region</p>
-          <h2 className="text-3xl md:text-5xl font-bold mb-12">From the 210 and beyond.</h2>
+          <h2 className="text-3xl md:text-5xl font-bold mb-6">Border to coast.</h2>
+          <p className="text-white/60 text-lg md:text-xl max-w-3xl mb-16">
+            Eagle Pass to Corpus Christi. Laredo to Lockhart. If you're in South Texas, you're home.
+          </p>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {[
               'San Antonio',
+              'Eagle Pass',
+              'Corpus Christi',
+              'Laredo',
               'New Braunfels',
               'Schertz',
               'Seguin',
@@ -116,9 +138,18 @@ export default function Home() {
               'Boerne',
               'Kyle',
               'San Marcos',
+              'Lockhart',
+              'Pleasanton',
+              'Jourdanton',
+              'Devine',
+              'Hondo',
+              'Bandera',
+              'Kerrville',
+              'Uvalde',
+              'Carrizo Springs',
             ].map((city) => (
-              <div key={city} className="py-4 px-6 bg-white/5 rounded-lg">
-                <p className="text-white/80 font-medium">{city}</p>
+              <div key={city} className="py-3 px-4 bg-white/5 rounded-lg text-center">
+                <p className="text-white/70 text-sm font-medium">{city}</p>
               </div>
             ))}
           </div>
