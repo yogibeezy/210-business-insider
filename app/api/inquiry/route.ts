@@ -19,30 +19,34 @@ export async function POST(request: Request) {
     }
 
     // Send to Global Control
+    const gcPayload = {
+      email: email,
+      firstName: name.split(' ')[0],
+      lastName: name.split(' ').slice(1).join(' ') || '',
+      customFields: {
+        businessName: business,
+        source: '210 Business Network Website',
+        inquiryDate: new Date().toISOString()
+      },
+      tags: ['210bn', 'website-inquiry']
+    }
+    
+    console.log('Sending to Global Control:', JSON.stringify(gcPayload))
+    
     const response = await fetch('https://app.globalcontrolcenter.com/api/v1/contacts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer a5934d6c63f5d021e4d85164945d144fbefeaf6298938c02ba2655acb093379c'
       },
-      body: JSON.stringify({
-        email: email,
-        firstName: name.split(' ')[0],
-        lastName: name.split(' ').slice(1).join(' ') || '',
-        customFields: {
-          businessName: business,
-          source: '210 Business Network Website',
-          inquiryDate: new Date().toISOString()
-        },
-        tags: ['210bn', 'website-inquiry']
-      })
+      body: JSON.stringify(gcPayload)
     })
 
     if (!response.ok) {
-      const error = await response.text()
-      console.error('Global Control API error:', error)
+      const errorText = await response.text()
+      console.error('Global Control API error:', response.status, errorText)
       return new Response(
-        JSON.stringify({ error: 'Failed to create contact' }),
+        JSON.stringify({ error: `Failed to create contact: ${response.status} - ${errorText}` }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
       )
     }
