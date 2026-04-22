@@ -27,7 +27,7 @@ export async function POST(request: Request) {
           source: '210 Business Network Website',
           inquiryDate: new Date().toISOString()
         },
-        tags: ['210-business-network', 'website-inquiry', 'south-texas']
+        tags: ['210bn', 'website-inquiry']
       })
     })
 
