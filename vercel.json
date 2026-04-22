@@ -1,7 +1,0 @@
-{
-  "functions": {
-    "app/api/inquiry/route.ts": {
-      "maxDuration": 30
-    }
-  }
-}
