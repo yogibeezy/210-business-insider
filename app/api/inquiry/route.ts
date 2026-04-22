@@ -33,11 +33,11 @@ export async function POST(request: Request) {
 
     console.log('Sending to Global Control:', JSON.stringify(gcPayload))
 
-    const response = await fetch('https://api.globalcontrolcenter.com/v1/contacts', {
+    const response = await fetch('https://api.globalcontrol.io/api/ai/contacts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer a5934d6c63f5d021e4d85164945d144fbefeaf6298938c02ba2655acb093379c'
+        'X-API-KEY': 'a5934d6c63f5d021e4d85164945d144fbefeaf6298938c02ba2655acb093379c'
       },
       body: JSON.stringify(gcPayload)
     })
